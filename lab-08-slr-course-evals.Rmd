@@ -182,19 +182,68 @@ evals %>%
 
 9.  Fit a new linear model called `score_gender_fit` to predict average professor evaluation `score` based on `gender` of the professor.
     Based on the regression output, write the linear model and interpret the slope and intercept in context of the data.
+```{r}
+
+score_gender_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score~gender, data = evals) %>%
+  tidy()
+
+score_gender_fit
+
+```
+***The model is:***
+***score = 4.09 + 0.14 x Male***
+
+***A male professor on average scores 0.14 higher on evaluations than a female professor. On average, a female professor scores 4.09 on the ratings***
 
 10. What is the equation of the line corresponding to male professors?
     What is it for female professors?
+***For Males, the equation is `score = 4.09 + 0.14 = 4.23`***
+***For Females, the equation is `score = 4.09`***
 
 11. Fit a new linear model called `score_rank_fit` to predict average professor evaluation `score` based on `rank` of the professor.
     Based on the regression output, write the linear model and interpret the slopes and intercept in context of the data.
+```{r}
+
+score_rank_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score~rank, data = evals) %>%
+  tidy()
+
+score_rank_fit
+
+```
+***the model is:***
+***score = 4.28 - 0.12 x Tenure Track - 0.18 x Tenured***
+
+***The average rating for a teaching track professor is 4.28, while the average for a tenure track professor is 4.16, and for a tenured professor, it's 4.14.***
 
 12. Create a new variable called `rank_relevel` where `"tenure track"` is the baseline level.
+
+```{r}
+
+evals <- evals %>%
+  mutate(rank_relevel = relevel(rank, ref = "tenured"))
+
+```
 
 13. Fit a new linear model called `score_rank_relevel_fit` to predict average professor evaluation `score` based on `rank_relevel` of the professor.
     This is the new (releveled) variable you created in Exercise 12.
     Based on the regression output, write the linear model and interpret the slopes and intercept in context of the data.
-   
+```{r}
+
+score_rank_relevel_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score~rank_relevel, data = evals) %>%
+  tidy()
+
+score_rank_relevel_fit
+
+```
+***The model is:***
+$$\widehat{score} = 4.14 + 0.14\times teaching + 0.02\times Tenure track$$
+***The average rating for tenured professor is 4.14, the average for a teaching prof is 0.14 points higher than that, and for a tenure track professor is 0.02 higher than a tenured professor.***
 
 14. Create another new variable called `tenure_eligible` that labels `"teaching"` faculty as `"no"` and labels `"tenure track"` and `"tenured"` faculty as `"yes"`.
 
